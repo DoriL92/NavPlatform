@@ -209,6 +209,7 @@ cd NavigationPlatform
 ### Run these commands to install HTTPS dev certificates:
 ```bash
 dotnet dev-certs https --clean
+dotnet dev-certs https -ep "$env:USERPROFILE\.aspnet\https\devcert.pfx" -p pass123!
 dotnet dev-certs https --trust
 
 # Start all services
