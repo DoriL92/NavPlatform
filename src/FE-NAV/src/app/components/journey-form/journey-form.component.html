@@ -1,0 +1,157 @@
+<div class="journey-form-container">
+  <div class="form-header">
+    <h2>
+      <span class="material-icons">{{ isEditMode ? 'edit' : 'add' }}</span>
+      {{ isEditMode ? 'Edit Journey' : 'Create New Journey' }}
+    </h2>
+    <p class="form-subtitle">Record your travel details</p>
+  </div>
+
+  <form [formGroup]="journeyForm" (ngSubmit)="onSubmit()" class="journey-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="startLocation" class="form-label">
+          <span class="material-icons">location_on</span>
+          Start Location <span class="required">*</span>
+        </label>
+        <input
+          type="text"
+          id="startLocation"
+          formControlName="startLocation"
+          class="md-text-field"
+          [class.md-text-field-error]="isFieldInvalid('startLocation')"
+          placeholder="e.g., Tirana, AL"
+          maxlength="100"
+        />
+        <div class="error-message" *ngIf="getErrorMessage('startLocation')">
+          <span class="material-icons">error</span>
+          {{ getErrorMessage('startLocation') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="arrivalLocation" class="form-label">
+          <span class="material-icons">location_on</span>
+          Arrival Location <span class="required">*</span>
+        </label>
+        <input
+          type="text"
+          id="arrivalLocation"
+          formControlName="arrivalLocation"
+          class="md-text-field"
+          [class.md-text-field-error]="isFieldInvalid('arrivalLocation')"
+          placeholder="e.g., Durrës, AL"
+          maxlength="100"
+        />
+        <div class="error-message" *ngIf="getErrorMessage('arrivalLocation')">
+          <span class="material-icons">error</span>
+          {{ getErrorMessage('arrivalLocation') }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="startTime" class="form-label">
+          <span class="material-icons">schedule</span>
+          Start Time <span class="required">*</span>
+        </label>
+        <input
+          type="datetime-local"
+          id="startTime"
+          formControlName="startTime"
+          class="md-text-field"
+          [class.md-text-field-error]="isFieldInvalid('startTime')"
+        />
+        <div class="error-message" *ngIf="getErrorMessage('startTime')">
+          <span class="material-icons">error</span>
+          {{ getErrorMessage('startTime') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="arrivalTime" class="form-label">
+          <span class="material-icons">schedule</span>
+          Arrival Time <span class="required">*</span>
+        </label>
+        <input
+          type="datetime-local"
+          id="arrivalTime"
+          formControlName="arrivalTime"
+          class="md-text-field"
+          [class.md-text-field-error]="isFieldInvalid('arrivalTime')"
+        />
+        <div class="error-message" *ngIf="getErrorMessage('arrivalTime')">
+          <span class="material-icons">error</span>
+          {{ getErrorMessage('arrivalTime') }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="transportType" class="form-label">
+          <span class="material-icons">directions_car</span>
+          Transport Type <span class="required">*</span>
+        </label>
+        <select
+          id="transportType"
+          formControlName="transportType"
+          class="md-text-field"
+          [class.md-text-field-error]="isFieldInvalid('transportType')"
+        >
+          <option *ngFor="let type of transportTypes" [value]="type">
+            {{ type }}
+          </option>
+        </select>
+        <div class="error-message" *ngIf="getErrorMessage('transportType')">
+          <span class="material-icons">error</span>
+          {{ getErrorMessage('transportType') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="distanceKm" class="form-label">
+          <span class="material-icons">straighten</span>
+          Distance (km) <span class="required">*</span>
+        </label>
+        <input
+          type="number"
+          id="distanceKm"
+          formControlName="distanceKm"
+          class="md-text-field"
+          [class.md-text-field-error]="isFieldInvalid('distanceKm')"
+          placeholder="0.00"
+          step="0.01"
+          min="0.01"
+          max="9999.99"
+        />
+        <div class="error-message" *ngIf="getErrorMessage('distanceKm')">
+          <span class="material-icons">error</span>
+          {{ getErrorMessage('distanceKm') }}
+        </div>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button
+        type="button"
+        class="md-button md-button-secondary"
+        (click)="onCancel()"
+        [disabled]="isSubmitting"
+      >
+        <span class="material-icons">close</span>
+        Cancel
+      </button>
+      <button
+        type="submit"
+        class="md-button md-button-primary"
+        [disabled]="journeyForm.invalid || isSubmitting"
+      >
+        <span *ngIf="isSubmitting" class="spinner"></span>
+        <span *ngIf="!isSubmitting" class="material-icons">{{ isEditMode ? 'save' : 'add' }}</span>
+        {{ isSubmitting ? 'Saving...' : (isEditMode ? 'Update Journey' : 'Create Journey') }}
+      </button>
+    </div>
+  </form>
+</div> 

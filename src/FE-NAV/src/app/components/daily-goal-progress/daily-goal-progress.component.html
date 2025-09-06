@@ -1,0 +1,85 @@
+<div class="daily-goal-container" *ngIf="dailyProgress">
+  <!-- Real-time Notification -->
+  <div class="realtime-notification" *ngIf="showRealTimeNotification" [@slideInOut]>
+    <div class="realtime-content">
+      <span class="material-icons">rocket_launch</span>
+      <span class="realtime-text">{{ realTimeNotificationMessage }}</span>
+      <button class="close-btn" (click)="closeRealTimeNotification()" aria-label="Close notification">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Achievement Notification -->
+  <div class="achievement-notification" *ngIf="showAchievement" [@slideInOut]>
+    <div class="achievement-content">
+      <span class="material-icons">emoji_events</span>
+      <span class="achievement-text">{{ achievementMessage }}</span>
+      <button class="close-btn" (click)="closeAchievement()" aria-label="Close notification">
+        <span class="material-icons">close</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Daily Goal Progress -->
+  <div class="goal-progress">
+    <div class="goal-header">
+      <div class="goal-title-section">
+        <h3 class="goal-title">
+          <span class="material-icons">target</span>
+          Daily Goal: {{ dailyProgress.targetDistance }}km
+        </h3>
+        <div class="goal-arrow">
+          <span class="material-icons">my_location</span>
+        </div>
+      </div>
+      <div class="goal-status" [class.achieved]="dailyProgress.isAchieved">
+        <span *ngIf="dailyProgress.isAchieved" class="achieved-badge">
+          <span class="material-icons">celebration</span>
+          Achieved!
+        </span>
+        <span *ngIf="!dailyProgress.isAchieved" class="remaining-text">
+          {{ dailyProgress.remainingDistance.toFixed(2) }}km remaining
+        </span>
+      </div>
+    </div>
+
+    <!-- Connection Status -->
+    <div class="connection-status">
+      <span class="status-text">{{ getConnectionStatus() }}</span>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-container">
+      <div class="progress-bar">
+        <div 
+          class="progress-fill" 
+          [style.width]="getProgressBarWidth()"
+          [style.background-color]="getProgressBarColor()"
+          [@progressAnimation]>
+        </div>
+      </div>
+      <div class="progress-text">
+        <div class="progress-distance">
+          <span class="current-distance">{{ dailyProgress.currentDistance.toFixed(2) }}km</span>
+          <span class="separator">/</span>
+          <span class="target-distance">{{ dailyProgress.targetDistance }}km</span>
+        </div>
+        <div class="progress-percentage">
+          <span class="percentage">{{ dailyProgress.progressPercentage.toFixed(1) }}%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Achievement Time -->
+    <div class="achievement-time" *ngIf="dailyProgress.isAchieved && dailyProgress.achievedAt">
+      <span class="achievement-label">
+        <span class="material-icons">emoji_events</span>
+        Goal achieved at:
+      </span>
+      <span class="achievement-time-value">
+        {{ dailyProgress.achievedAt | date:'shortTime' }}
+      </span>
+    </div>
+  </div>
+</div> 

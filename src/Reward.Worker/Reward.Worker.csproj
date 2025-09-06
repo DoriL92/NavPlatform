@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-Reward.Worker-df9373e0-b0dc-4803-a6d2-ed0fd1791dcc</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.7" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+    <PackageReference Include="RabbitMQ.Client" Version="6.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Journey\Journey.Application\Journey.Application.csproj" />
+    <ProjectReference Include="..\Journey\Journey.Contracts\Journey.Contracts.csproj" />
+    <ProjectReference Include="..\Journey\Journey.Domain\Journey.Domain.csproj" />
+    <ProjectReference Include="..\Journey\Journey.Infrastructure\Journey.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Rewards\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+</Project>

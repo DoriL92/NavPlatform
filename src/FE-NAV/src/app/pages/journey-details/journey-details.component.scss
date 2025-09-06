@@ -1,0 +1,452 @@
+.journey-details-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--md-spacing-xl);
+}
+
+.details-header {
+  display: flex;
+  align-items: center;
+  gap: var(--md-spacing-md);
+  margin-bottom: var(--md-spacing-xl);
+
+  .back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--md-spacing-sm);
+    padding: var(--md-spacing-md) var(--md-spacing-lg);
+    border: none;
+    border-radius: var(--md-border-radius);
+    font-size: var(--md-typography-button);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    text-decoration: none;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: var(--md-surface-variant);
+    color: var(--md-on-surface-variant);
+    border: 1px solid var(--md-outline);
+
+    &:hover {
+      background: var(--md-surface-variant-dark);
+    }
+
+    .material-icons {
+      font-size: 18px;
+    }
+  }
+
+  h1 {
+    margin: 0;
+    color: var(--md-on-surface);
+    font-size: var(--md-typography-h3);
+    font-weight: 500;
+  }
+}
+
+.journey-details {
+  background: var(--md-surface);
+  border-radius: var(--md-border-radius-large);
+  box-shadow: var(--md-elevation-1);
+  padding: var(--md-spacing-xl);
+  border: 1px solid var(--md-outline);
+}
+
+.transport-section {
+  display: flex;
+  align-items: center;
+  gap: var(--md-spacing-lg);
+  margin-bottom: var(--md-spacing-xl);
+  padding-bottom: var(--md-spacing-lg);
+  border-bottom: 1px solid var(--md-outline);
+
+  .transport-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: var(--md-border-radius-medium);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--md-on-primary);
+    box-shadow: var(--md-elevation-1);
+
+    .material-icons {
+      font-size: 24px;
+    }
+  }
+
+  .transport-info {
+    h2 {
+      margin: 0 0 var(--md-spacing-sm) 0;
+      color: var(--md-on-surface);
+      font-size: var(--md-typography-h4);
+      font-weight: 500;
+    }
+
+    .journey-date {
+      margin: 0;
+      color: var(--md-on-surface-variant);
+      font-size: var(--md-typography-body1);
+    }
+  }
+
+  .daily-goal-badge {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-sm);
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #8b6914;
+    padding: var(--md-spacing-md) var(--md-spacing-lg);
+    border-radius: 25px;
+    font-size: var(--md-typography-body2);
+    font-weight: 600;
+    box-shadow: 0 3px 12px rgba(255, 215, 0, 0.4);
+    animation: badgeGlow 2s ease-in-out infinite alternate;
+
+    .material-icons {
+      font-size: 20px;
+    }
+
+    .badge-text {
+      white-space: nowrap;
+    }
+  }
+}
+
+.route-section {
+  margin-bottom: var(--md-spacing-xl);
+
+  .route-point {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--md-spacing-lg);
+    margin-bottom: var(--md-spacing-lg);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .point-marker {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-top: 0.5rem;
+      flex-shrink: 0;
+
+      &.start-marker {
+        background: var(--md-success);
+      }
+
+      &.arrival-marker {
+        background: var(--md-danger);
+      }
+    }
+
+    .point-details {
+      flex: 1;
+
+      h3 {
+        margin: 0 0 var(--md-spacing-sm) 0;
+        color: var(--md-on-surface);
+        font-size: var(--md-typography-h6);
+        font-weight: 500;
+      }
+
+      .location {
+        margin: 0 0 var(--md-spacing-xs) 0;
+        color: var(--md-on-surface);
+        font-size: var(--md-typography-body1);
+        font-weight: 500;
+      }
+
+      .time {
+        margin: 0;
+        color: var(--md-on-surface-variant);
+        font-size: var(--md-typography-body2);
+      }
+    }
+  }
+
+  .route-line {
+    position: relative;
+    margin-left: 6px;
+    margin-bottom: var(--md-spacing-lg);
+    height: 32px;
+    display: flex;
+    align-items: center;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: var(--md-outline-variant);
+    }
+
+    .route-duration {
+      position: absolute;
+      left: var(--md-spacing-sm);
+      top: 50%;
+      transform: translateY(-50%);
+      background: var(--md-surface);
+      padding: var(--md-spacing-xs) var(--md-spacing-sm);
+      border-radius: var(--md-border-radius-large);
+      font-size: var(--md-typography-caption);
+      color: var(--md-on-surface-variant);
+      font-weight: 500;
+      border: 1px solid var(--md-outline);
+      white-space: nowrap;
+      z-index: 1;
+    }
+  }
+}
+
+.journey-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--md-spacing-lg);
+  margin-bottom: var(--md-spacing-xl);
+
+  .stat-card {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-md);
+    padding: var(--md-spacing-lg);
+    background: var(--md-surface-variant);
+    border-radius: var(--md-border-radius-medium);
+    border: 1px solid var(--md-outline);
+
+    .stat-icon {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--md-surface);
+      border-radius: var(--md-border-radius);
+      box-shadow: var(--md-elevation-1);
+
+      .material-icons {
+        font-size: 20px;
+        color: var(--md-primary);
+      }
+    }
+
+    .stat-content {
+      h4 {
+        margin: 0 0 var(--md-spacing-xs) 0;
+        color: var(--md-on-surface-variant);
+        font-size: var(--md-typography-caption);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+      }
+
+      .stat-value {
+        margin: 0;
+        color: var(--md-on-surface);
+        font-size: var(--md-typography-body1);
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+.journey-actions {
+  display: flex;
+  gap: var(--md-spacing-md);
+  justify-content: center;
+
+  .md-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--md-spacing-sm);
+    padding: var(--md-spacing-md) var(--md-spacing-lg);
+    border: none;
+    border-radius: var(--md-border-radius);
+    font-size: var(--md-typography-button);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    .material-icons {
+      font-size: 18px;
+    }
+
+    &.md-button-primary {
+      background: var(--md-primary);
+      color: var(--md-on-primary);
+
+      &:hover {
+        background: var(--md-primary-dark);
+        box-shadow: var(--md-elevation-2);
+      }
+    }
+
+    &.md-button-secondary {
+      background: var(--md-surface-variant);
+      color: var(--md-on-surface-variant);
+      border: 1px solid var(--md-outline);
+
+      &:hover {
+        background: var(--md-surface-variant-dark);
+        box-shadow: var(--md-elevation-1);
+      }
+    }
+  }
+}
+
+.not-found {
+  text-align: center;
+  padding: var(--md-spacing-xl);
+
+  h2 {
+    color: var(--md-on-surface);
+    margin-bottom: var(--md-spacing-md);
+    font-size: var(--md-typography-h4);
+  }
+
+  p {
+    color: var(--md-on-surface-variant);
+    margin-bottom: var(--md-spacing-xl);
+    font-size: var(--md-typography-body1);
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: var(--md-spacing-xl);
+
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--md-outline);
+    border-top: 3px solid var(--md-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto var(--md-spacing-md);
+  }
+
+  p {
+    color: var(--md-on-surface-variant);
+    margin: 0;
+    font-size: var(--md-typography-body1);
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Daily Goal Badge Animation
+@keyframes badgeGlow {
+  0% {
+    box-shadow: 0 3px 12px rgba(255, 215, 0, 0.4);
+  }
+  100% {
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.7);
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .journey-details-container {
+    padding: var(--md-spacing-lg);
+  }
+
+  .journey-details {
+    padding: var(--md-spacing-lg);
+  }
+
+  .journey-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .journey-actions {
+    flex-direction: column;
+  }
+}
+
+.sharing-section {
+  background: var(--md-surface-variant);
+  border-radius: var(--md-border-radius-medium);
+  padding: var(--md-spacing-lg);
+  margin: var(--md-spacing-lg) 0;
+  border: 1px solid var(--md-outline);
+
+  h3 {
+    margin: 0 0 var(--md-spacing-md) 0;
+    color: var(--md-on-surface);
+    font-size: var(--md-typography-h5);
+    font-weight: 500;
+  }
+
+  .sharing-details {
+    display: flex;
+    flex-direction: column;
+    gap: var(--md-spacing-sm);
+
+    .share-status,
+    .share-count,
+    .last-shared {
+      display: flex;
+      align-items: center;
+      gap: var(--md-spacing-sm);
+      padding: var(--md-spacing-sm) var(--md-spacing-md);
+      border-radius: var(--md-border-radius);
+      background: var(--md-surface);
+      border: 1px solid var(--md-outline);
+
+      .material-icons {
+        font-size: 16px;
+        color: var(--md-primary);
+      }
+
+      .status-text,
+      .count-text,
+      .time-text {
+        font-size: var(--md-typography-body2);
+        color: var(--md-on-surface);
+        font-weight: 500;
+      }
+    }
+
+    .share-status.public {
+      border-color: var(--md-success);
+      background: rgba(56, 142, 60, 0.1);
+      
+      .status-text {
+        color: var(--md-success);
+      }
+    }
+
+    .share-count {
+      border-color: var(--md-primary);
+      background: rgba(25, 118, 210, 0.1);
+      
+      .count-text {
+        color: var(--md-primary);
+      }
+    }
+
+    .last-shared {
+      border-color: var(--md-secondary);
+      background: rgba(117, 117, 117, 0.1);
+      
+      .time-text {
+        color: var(--md-secondary);
+      }
+    }
+  }
+} 

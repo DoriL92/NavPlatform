@@ -1,0 +1,418 @@
+{
+  "info": {
+    "name": "Navigation Platform API",
+    "description": "Complete API collection for the Navigation Platform including Journey Management, User Authentication, Daily Goals, and Real-time Notifications",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "gateway_url",
+      "value": "http://localhost:7002",
+      "type": "string"
+    },
+    {
+      "key": "auth_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/auth/login",
+              "host": ["{{gateway_url}}"],
+              "path": ["auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"name\": \"New User\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/auth/register",
+              "host": ["{{gateway_url}}"],
+              "path": ["auth", "register"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"refreshToken\": \"{{refresh_token}}\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/auth/refresh",
+              "host": ["{{gateway_url}}"],
+              "path": ["auth", "refresh"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Journey Management",
+      "item": [
+        {
+          "name": "Get All Journeys",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/journeys?page=1&pageSize=20",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "journeys"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Journey by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/journeys/1",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "journeys", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Create Journey",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"startLocation\": \"Home\",\n  \"startTime\": \"2024-01-15T08:00:00Z\",\n  \"arrivalLocation\": \"Office\",\n  \"arrivalTime\": \"2024-01-15T09:00:00Z\",\n  \"transportType\": \"Car\",\n  \"distanceKm\": 15.5\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/journeys",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "journeys"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Journey",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"startLocation\": \"Home Updated\",\n  \"startTime\": \"2024-01-15T08:00:00Z\",\n  \"arrivalLocation\": \"Office Updated\",\n  \"arrivalTime\": \"2024-01-15T09:00:00Z\",\n  \"transportType\": \"Bus\",\n  \"distanceKm\": 18.2\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/journeys/1",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "journeys", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Journey",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/journeys/1",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "journeys", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Public Journeys",
+      "item": [
+        {
+          "name": "Generate Public Link",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"journeyId\": 1\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/journeys/1/public-link",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "journeys", "1", "public-link"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Public Journey",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/journeys/abc123def456",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "journeys", "abc123def456"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Revoke Public Link",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/journeys/1/public-link",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "journeys", "1", "public-link"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Daily Goals",
+      "item": [
+        {
+          "name": "Get Daily Progress",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/daily-goals/progress?date=2024-01-15",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "daily-goals", "progress"],
+              "query": [
+                {
+                  "key": "date",
+                  "value": "2024-01-15"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Achievement History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/daily-goals/achievements?page=1&pageSize=10",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "daily-goals", "achievements"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Management",
+      "item": [
+        {
+          "name": "Get User Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/users/profile",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "users", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Updated Name\",\n  \"email\": \"updated@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/users/profile",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "users", "profile"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Statistics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/users/statistics",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "users", "statistics"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Notifications",
+      "item": [
+        {
+          "name": "Get Notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{gateway_url}}/api/notifications?page=1&pageSize=20",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "notifications"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Mark Notification as Read",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"notificationId\": 1,\n  \"isRead\": true\n}"
+            },
+            "url": {
+              "raw": "{{gateway_url}}/api/notifications/1/read",
+              "host": ["{{gateway_url}}"],
+              "path": ["api", "notifications", "1", "read"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Auto-set auth token from login response",
+          "if (pm.response && pm.response.json() && pm.response.json().token) {",
+          "    pm.collectionVariables.set('auth_token', pm.response.json().token);",
+          "}"
+        ]
+      }
+    }
+  ]
+}

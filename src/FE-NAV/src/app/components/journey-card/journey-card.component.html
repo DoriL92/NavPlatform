@@ -1,0 +1,114 @@
+<div class="journey-card" (click)="onViewDetails()" *ngIf="journey">
+  <div class="card-header">
+    <div class="transport-info">
+      <span 
+        class="transport-icon" 
+        [style.background-color]="getTransportColor(journey.transportType)"
+        [attr.aria-label]="'Transport type: ' + journey.transportType"
+      >
+        <span class="material-icons">{{ getTransportIcon(journey.transportType) }}</span>
+      </span>
+      <span class="transport-type">{{ journey.transportType }}</span>
+    </div>
+    
+    <!-- Daily Goal Achievement Badge -->
+    <div class="daily-goal-badge" *ngIf="journey.isDailyGoalAchieved">
+      <span class="material-icons">emoji_events</span>
+      <span class="badge-text">Daily Goal</span>
+    </div>
+  </div>
+
+  <div class="card-content">
+    <div class="route-info">
+      <div class="location start">
+        <div class="location-dot start-dot"></div>
+        <div class="location-details">
+          <span class="location-name">{{ journey.startLocation }}</span>
+          <span class="location-time">{{ formatDateTime(journey.startTime) }}</span>
+        </div>
+      </div>
+      
+      <div class="route-line">
+        <div class="route-duration">{{ formatDuration(journey.startTime, journey.arrivalTime) }}</div>
+      </div>
+      
+      <div class="location arrival">
+        <div class="location-dot arrival-dot"></div>
+        <div class="location-details">
+          <span class="location-name">{{ journey.arrivalLocation }}</span>
+          <span class="location-time">{{ formatDateTime(journey.arrivalTime) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="journey-stats">
+      <div class="stat">
+        <span class="stat-label">Distance</span>
+        <span class="stat-value">{{ journey.distanceKm }} km</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Duration</span>
+        <span class="stat-value">{{ formatDuration(journey.startTime, journey.arrivalTime) }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="card-actions" *ngIf="showActions" (click)="$event.stopPropagation()">
+    <button 
+      class="action-btn edit-btn" 
+      (click)="onEdit($event)"
+      [attr.aria-label]="'Edit journey'"
+    >
+      <span class="material-icons">edit</span>
+    </button>
+    
+    <button 
+      class="action-btn delete-btn" 
+      (click)="onDelete($event)"
+      [attr.aria-label]="'Delete journey'"
+    >
+      <span class="material-icons">delete</span>
+    </button>
+    
+    <button 
+      class="action-btn share-btn" 
+      (click)="onShare($event)"
+      [attr.aria-label]="'Share journey'"
+    >
+      <span class="material-icons">share</span>
+    </button>
+    
+    <button 
+      class="action-btn favorite-btn" 
+      [class.favorited]="journey.isFavorite"
+      (click)="onFavorite($event)"
+      [attr.aria-label]="journey.isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+    >
+      <span class="material-icons">{{ journey.isFavorite ? 'favorite' : 'favorite_border' }}</span>
+    </button>
+  </div>
+
+  <!-- Sharing status -->
+  <div class="sharing-status" *ngIf="journey.isPublic || journey.shareCount">
+    <div class="share-info" *ngIf="journey.isPublic">
+      <span class="material-icons">public</span>
+      <span class="status-text">Public</span>
+    </div>
+    <div class="share-count" *ngIf="journey.shareCount">
+      <span class="material-icons">share</span>
+      <span class="status-text">{{ journey.shareCount }} shares</span>
+    </div>
+    <div class="last-shared" *ngIf="journey.lastSharedAt">
+      <span class="material-icons">schedule</span>
+      <span class="status-text">{{ getTimeAgo(journey.lastSharedAt) }}</span>
+    </div>
+  </div>
+
+
+
+  <div class="card-footer" *ngIf="journey.createdAt">
+    <span class="created-date">
+      Created {{ formatDateTime(journey.createdAt) }}
+    </span>
+  </div>
+</div> 

@@ -1,0 +1,206 @@
+name: Node.js Frontend CI/CD
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'src/FE-NAV/**'
+      - '.github/workflows/node.yml'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'src/FE-NAV/**'
+
+env:
+  NODE_VERSION: '18.x'
+  COVERAGE_THRESHOLD: 80
+
+jobs:
+  test:
+    name: Test and Coverage
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: src/FE-NAV/package-lock.json
+    
+    - name: Install dependencies
+      working-directory: src/FE-NAV
+      run: npm ci
+    
+    - name: Run linting
+      working-directory: src/FE-NAV
+      run: npm run lint
+    
+    - name: Run unit tests
+      working-directory: src/FE-NAV
+      run: npm run test:ci
+    
+    - name: Run e2e tests
+      working-directory: src/FE-NAV
+      run: npm run e2e:ci
+    
+    - name: Generate coverage report
+      working-directory: src/FE-NAV
+      run: npm run test:coverage
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./src/FE-NAV/coverage/lcov.info
+        flags: frontend
+        name: frontend-coverage
+        fail_ci_if_error: true
+    
+    - name: Coverage Badge
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: src/FE-NAV/coverage/lcov.info
+        badge_title: Frontend Coverage
+        badge_label: Coverage
+        format: lcov
+        hide_branch_rate: false
+        hide_complexity: true
+        thresholds: '80 90 95'
+
+  build:
+    name: Build and Test Production
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: src/FE-NAV/package-lock.json
+    
+    - name: Install dependencies
+      working-directory: src/FE-NAV
+      run: npm ci
+    
+    - name: Build for production
+      working-directory: src/FE-NAV
+      run: npm run build
+    
+    - name: Build Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./src/FE-NAV
+        push: false
+        tags: frontend:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+  lighthouse:
+    name: Lighthouse Performance Audit
+    runs-on: ubuntu-latest
+    needs: build
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: src/FE-NAV/package-lock.json
+    
+    - name: Install dependencies
+      working-directory: src/FE-NAV
+      run: npm ci
+    
+    - name: Build application
+      working-directory: src/FE-NAV
+      run: npm run build
+    
+    - name: Run Lighthouse CI
+      working-directory: src/FE-NAV
+      run: |
+        npm install -g @lhci/cli@0.12.x
+        lhci autorun
+      env:
+        LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+        cache-dependency-path: src/FE-NAV/package-lock.json
+    
+    - name: Install dependencies
+      working-directory: src/FE-NAV
+      run: npm ci
+    
+    - name: Run npm audit
+      working-directory: src/FE-NAV
+      run: npm audit --audit-level=moderate
+    
+    - name: Run Snyk to check for vulnerabilities
+      uses: snyk/actions/node@master
+      continue-on-error: true
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --file=src/FE-NAV/package.json
+
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build, lighthouse, security-scan]
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Deploy to staging
+      run: |
+        echo "Deploying frontend to staging environment..."
+        # Add your staging deployment commands here
+        # Example: kubectl apply -f k8s/staging/frontend/
+    
+    - name: Run smoke tests
+      run: |
+        echo "Running smoke tests against staging..."
+        # Add smoke test commands here
+
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build, lighthouse, security-scan]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Deploy to production
+      run: |
+        echo "Deploying frontend to production environment..."
+        # Add your production deployment commands here
+        # Example: kubectl apply -f k8s/production/frontend/
+    
+    - name: Health check
+      run: |
+        echo "Running health checks..."
+        # Add health check commands here

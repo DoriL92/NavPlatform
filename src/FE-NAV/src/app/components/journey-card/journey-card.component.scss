@@ -1,0 +1,381 @@
+.journey-card {
+  background: var(--md-surface);
+  border-radius: var(--md-border-radius-medium);
+  box-shadow: var(--md-elevation-1);
+  border: 1px solid var(--md-outline);
+  overflow: hidden;
+  padding: var(--md-spacing-lg);
+  margin-bottom: var(--md-spacing-md);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--md-elevation-2);
+  }
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--md-spacing-lg);
+
+  .transport-info {
+    display: flex;
+    align-items: center;
+    gap: var(--md-spacing-sm);
+
+    .transport-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--md-border-radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--md-on-primary);
+      background: var(--md-primary);
+
+      .material-icons {
+        font-size: 20px;
+      }
+    }
+
+    .transport-type {
+      font-weight: 500;
+      color: var(--md-on-surface);
+      font-size: var(--md-typography-h6);
+      text-transform: capitalize;
+    }
+  }
+
+  .daily-goal-badge {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #8b6914;
+    padding: 0.75rem 1rem;
+    border-radius: 25px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 3px 12px rgba(255, 215, 0, 0.4);
+    animation: badgeGlow 2s ease-in-out infinite alternate;
+
+    .material-icons {
+      font-size: 1.2rem;
+    }
+
+    .badge-text {
+      white-space: nowrap;
+    }
+  }
+}
+
+.card-content {
+  .route-info {
+    margin-bottom: var(--md-spacing-lg);
+
+    .location {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--md-spacing-md);
+      margin-bottom: var(--md-spacing-md);
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .location-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-top: 0.5rem;
+        flex-shrink: 0;
+
+        &.start-dot {
+          background: var(--md-success);
+        }
+
+        &.arrival-dot {
+          background: var(--md-danger);
+        }
+      }
+
+      .location-details {
+        flex: 1;
+
+        .location-name {
+          display: block;
+          font-weight: 500;
+          color: var(--md-on-surface);
+          font-size: var(--md-typography-body1);
+          margin-bottom: var(--md-spacing-xs);
+        }
+
+        .location-time {
+          display: block;
+          color: var(--md-on-surface-variant);
+          font-size: var(--md-typography-body2);
+        }
+      }
+    }
+
+    .route-line {
+      position: relative;
+      margin-left: 4px;
+      margin-bottom: var(--md-spacing-md);
+      height: 32px;
+      display: flex;
+      align-items: center;
+
+      &::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 1px;
+        background: var(--md-outline-variant);
+      }
+
+      .route-duration {
+        position: absolute;
+        left: var(--md-spacing-sm);
+        top: 50%;
+        transform: translateY(-50%);
+        display: inline-flex;
+        align-items: center;
+        padding: var(--md-spacing-xs) var(--md-spacing-sm);
+        background: var(--md-surface);
+        color: var(--md-on-surface-variant);
+        border: 1px solid var(--md-outline);
+        border-radius: var(--md-border-radius-large);
+        font-size: var(--md-typography-caption);
+        font-weight: 500;
+        white-space: nowrap;
+        z-index: 1;
+      }
+    }
+  }
+
+  .journey-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--md-spacing-md);
+    padding: var(--md-spacing-md);
+    background: var(--md-surface-variant);
+    border-radius: var(--md-border-radius);
+    border: 1px solid var(--md-outline);
+
+    .stat {
+      text-align: center;
+
+      .stat-label {
+        display: block;
+        font-size: var(--md-typography-caption);
+        color: var(--md-on-surface-variant);
+        margin-bottom: var(--md-spacing-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 500;
+      }
+
+      .stat-value {
+        display: block;
+        font-weight: 500;
+        color: var(--md-on-surface);
+        font-size: var(--md-typography-body1);
+      }
+    }
+  }
+}
+
+.card-actions {
+  display: flex;
+  gap: var(--md-spacing-sm);
+  margin-top: var(--md-spacing-lg);
+  padding-top: var(--md-spacing-md);
+  border-top: 1px solid var(--md-outline);
+
+  .action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--md-spacing-sm);
+    padding: var(--md-spacing-sm);
+    border: none;
+    border-radius: var(--md-border-radius);
+    font-size: var(--md-typography-button);
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: inherit;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: background-color 0.2s ease;
+    min-width: 40px;
+    height: 40px;
+
+    .material-icons {
+      font-size: 18px;
+    }
+
+    &.edit-btn {
+      background: transparent;
+      color: var(--md-primary);
+      padding: var(--md-spacing-sm);
+      min-width: 40px;
+      height: 40px;
+
+      &:hover:not(:disabled) {
+        background: rgba(25, 118, 210, 0.04);
+      }
+    }
+
+    &.delete-btn {
+      background: var(--md-danger);
+      color: var(--md-on-primary);
+      padding: var(--md-spacing-sm);
+      min-width: 40px;
+      height: 40px;
+
+      &:hover:not(:disabled) {
+        background: var(--md-danger-dark);
+      }
+    }
+
+    &.share-btn {
+      background: var(--md-primary);
+      color: var(--md-on-primary);
+      padding: var(--md-spacing-sm);
+      min-width: 40px;
+      height: 40px;
+
+      &:hover:not(:disabled) {
+        background: var(--md-primary-dark);
+      }
+    }
+
+    &.favorite-btn {
+      background: transparent;
+      color: var(--md-warning);
+      padding: var(--md-spacing-sm);
+      min-width: 40px;
+      height: 40px;
+
+      &:hover:not(:disabled) {
+        background: rgba(255, 193, 7, 0.04);
+      }
+    }
+  }
+}
+
+.card-footer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e1e8ed;
+
+  .created-date {
+    font-size: 0.8rem;
+    color: #95a5a6;
+    font-style: italic;
+  }
+}
+
+// Sharing status styles
+.sharing-status {
+  display: flex;
+  gap: 12px;
+  padding: 8px 16px;
+  background: rgba(0, 0, 0, 0.02);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 12px;
+  color: #666;
+
+  .share-info,
+  .share-count,
+  .last-shared {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .material-icons {
+      font-size: 16px;
+    }
+
+    .status-text {
+      font-weight: 500;
+    }
+  }
+
+  .share-info {
+    color: #2563eb;
+  }
+
+  .share-count {
+    color: #059669;
+  }
+
+  .last-shared {
+    color: #7c3aed;
+  }
+}
+
+
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .journey-card {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+
+    .transport-info {
+      .transport-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1.25rem;
+      }
+    }
+  }
+
+  .card-content .journey-stats {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .card-actions {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .journey-card {
+    padding: 0.75rem;
+  }
+
+  .card-header .transport-info .transport-type {
+    font-size: 1rem;
+  }
+
+  .card-content .route-info .location {
+    gap: 0.75rem;
+  }
+}
+
+// Daily Goal Badge Animation
+@keyframes badgeGlow {
+  0% {
+    box-shadow: 0 3px 12px rgba(255, 215, 0, 0.4);
+  }
+  100% {
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.7);
+  }
+}
+
+ 

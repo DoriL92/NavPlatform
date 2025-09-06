@@ -1,0 +1,143 @@
+<div class="listing-container">
+
+
+  <!-- Notification Display -->
+  <div *ngIf="journeyService.notification$ | async as notification" class="notification-banner">
+    <span class="material-icons">notifications</span>
+    <span class="notification-text">{{ notification }}</span>
+  </div>
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-content">
+      <h1>My Journeys</h1>
+      <div class="header-actions">
+        <button class="md-button md-button-primary" (click)="openNewJourneyModal()">
+          <span class="material-icons">add</span>
+          New Journey
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Daily Goal Progress -->
+  <app-daily-goal-progress [journeys]="journeys"></app-daily-goal-progress>
+
+  <!-- Journey Tabs -->
+  <div class="journey-tabs">
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'all'"
+      (click)="switchTab('all')">
+      <span class="material-icons">map</span>
+      All Journeys
+      <span class="journey-count">({{ journeys.length }})</span>
+    </button>
+    <button 
+      class="tab-button" 
+      [class.active]="activeTab === 'favorites'"
+      (click)="switchTab('favorites')">
+      <span class="material-icons">star</span>
+      Favorites
+      <span class="journey-count">({{ getFavoriteCount() }})</span>
+    </button>
+  </div>
+
+  <!-- Journey Form Modal -->
+  <div class="modal" *ngIf="showModal" (click)="closeModal($event)">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2>{{ editingJourney ? 'Edit Journey' : 'New Journey' }}</h2>
+        <button class="close-button" (click)="closeModal()">&times;</button>
+      </div>
+      <app-journey-form
+        [journey]="editingJourney"
+        [isEditMode]="!!editingJourney"
+        (save)="onJourneySaved($event)"
+        (cancel)="closeModal()">
+      </app-journey-form>
+    </div>
+  </div>
+
+  <!-- Journey Grid -->
+  <div class="journey-grid" *ngIf="filteredJourneys.length > 0; else noJourneys">
+    <app-journey-card
+      *ngFor="let journey of filteredJourneys"
+      [journey]="journey"
+      [showActions]="true"
+      (edit)="onEditJourney(journey)"
+      (delete)="onDeleteJourney(journey)"
+      (favorite)="onFavoriteJourney(journey)"
+      (share)="onShareJourney(journey)"
+    ></app-journey-card>
+  </div>
+
+  <!-- No Journeys Message -->
+  <ng-template #noJourneys>
+    <div class="no-journeys">
+      <div class="no-journeys-icon">
+        <span class="material-icons">{{ activeTab === 'favorites' ? 'star' : 'directions_car' }}</span>
+      </div>
+      <h3>{{ activeTab === 'favorites' ? 'No favorite journeys yet' : 'No journeys yet' }}</h3>
+      <p>{{ activeTab === 'favorites' ? 'Start marking journeys as favorites to see them here!' : 'Start tracking your travels by creating your first journey!' }}</p>
+      <button 
+        *ngIf="activeTab === 'all'"
+        class="md-button md-button-primary" 
+        (click)="openNewJourneyModal()">
+        Create Your First Journey
+      </button>
+      <button 
+        *ngIf="activeTab === 'favorites'"
+        class="md-button md-button-secondary" 
+        (click)="switchTab('all')">
+        Browse All Journeys
+      </button>
+    </div>
+  </ng-template>
+
+  <!-- Pagination -->
+  <div class="pagination" *ngIf="filteredJourneys.length > pageSize">
+    <div class="pagination-info">
+      Showing {{ (currentPage - 1) * pageSize + 1 }} to {{ Math.min(currentPage * pageSize, filteredJourneys.length) }} of {{ filteredJourneys.length }} {{ activeTab === 'favorites' ? 'favorite' : '' }} journeys
+    </div>
+    
+    <div class="pagination-controls">
+      <button 
+        class="btn btn-secondary" 
+        [disabled]="currentPage === 1"
+        (click)="setPage(currentPage - 1)">
+        Previous
+      </button>
+      
+      <div class="page-numbers">
+        <button 
+          *ngFor="let page of getPageNumbers()"
+          class="btn btn-page"
+          [class.active]="page === currentPage"
+          (click)="setPage(page)">
+          {{ page }}
+        </button>
+      </div>
+      
+      <button 
+        class="btn btn-secondary" 
+        [disabled]="currentPage === totalPages"
+        (click)="setPage(currentPage + 1)">
+        Next
+      </button>
+    </div>
+    
+    <div class="page-size-control">
+      <label for="pageSize">Show:</label>
+      <select 
+        id="pageSize" 
+        #pageSizeSelect
+        [value]="pageSize"
+        (change)="onPageSizeChange(+pageSizeSelect.value)">
+        <option value="10">10</option>
+        <option value="20">20</option>
+        <option value="50">50</option>
+      </select>
+    </div>
+  </div>
+</div>

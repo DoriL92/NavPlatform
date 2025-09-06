@@ -1,0 +1,9 @@
+**/bin/
+**/obj/
+**/.vs/
+**/*.user
+**/*.csproj.user
+**/*.suo
+**/*.swp
+**/*.log
+**/node_modules/

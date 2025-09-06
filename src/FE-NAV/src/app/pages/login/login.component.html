@@ -1,0 +1,43 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <h1>Journey Tracker</h1>
+      <p>Sign in to continue your journey</p>
+    </div>
+
+    <div *ngIf="showSuspensionMessage" class="suspension-alert">
+      <div class="alert-icon">⚠️</div>
+      <div class="alert-content">
+        <h3>Account Suspended</h3>
+        <p>{{ suspensionMessage }}</p>
+      </div>
+    </div>
+
+
+
+    <!-- Loading State -->
+    <div *ngIf="authService.isLoading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Checking authentication...</p>
+    </div>
+
+    <!-- Login Button -->
+    <div *ngIf="!authService.isLoading && !authService.isAuthenticated" class="login-section">
+      <button 
+        class="login-button" 
+        (click)="onLogin()"
+        [disabled]="isLoggingIn">
+        <span *ngIf="!isLoggingIn">Sign In</span>
+        <span *ngIf="isLoggingIn">Signing In...</span>
+      </button>
+      
+      <p class="login-note">
+        You will be redirected to the authentication provider
+      </p>
+    </div>
+
+
+
+
+  </div>
+</div>

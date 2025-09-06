@@ -1,0 +1,114 @@
+version: "3.9"
+
+services:
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: mssql
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: ${SQL_SA_PASSWORD}   
+      MSSQL_PID: "Developer"               
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql-data:/var/opt/mssql   
+
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+
+  journey-api:
+    build:
+      context: ..
+      dockerfile: src/Journey/Journey.Api/Dockerfile
+      args:
+        BUILD_CONFIGURATION: Debug
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      Rabbit__Host: rabbitmq
+      Rabbit__Port: 5672
+      Rabbit__User: ${RABBIT_USER}
+      Rabbit__Pass: ${RABBIT_PASS}
+      ConnectionStrings__DefaultConnection: "Server=mssql,1433;Database=nav;User Id=sa;Password=${SQL_SA_PASSWORD};Encrypt=False;TrustServerCertificate=True;MultipleActiveResultSets=True"
+    ports:
+      - "7001:8080"
+    depends_on:
+      - mssql
+      - rabbitmq
+
+  notification-api:
+    build:
+      context: ..
+      dockerfile: src/Notification.Api/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:8080
+      Rabbit__Host: rabbitmq
+      Rabbit__Port: 5672
+      Rabbit__User: ${RABBIT_USER}
+      Rabbit__Pass: ${RABBIT_PASS}
+      ConnectionStrings__DefaultConnection: "Server=mssql;Database=notifications;User Id=sa;Password=${SQL_SA_PASSWORD};TrustServerCertificate=True;"
+    ports:
+      - "7003:8080"
+    depends_on:
+      - rabbitmq
+      - mssql
+
+  reward-worker:
+     build:
+       context: ..
+       dockerfile: src/Reward.Worker/Dockerfile
+     environment:
+       DOTNET_ENVIRONMENT: Development
+       Rabbit__Host: rabbitmq
+       Rabbit__Port: 5672
+       Rabbit__User: ${RABBIT_USER}
+       Rabbit__Pass: ${RABBIT_PASS}
+       Rabbit__Exchange: nav.events
+       Rabbit__Queue: daily-goal-achieved
+     depends_on:
+       - rabbitmq
+       - mssql
+
+  gateway-bff:
+    build:
+      context: ..
+      dockerfile: src/Gateway.Bff/Dockerfile
+      args:
+        BUILD_CONFIGURATION: Debug
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_Kestrel__Endpoints__Https__Url: "https://+:8080"
+      ASPNETCORE_Kestrel__Endpoints__Https__Certificate__Path: "/https/devcert.pfx"
+      ASPNETCORE_Kestrel__Endpoints__Https__Certificate__Password: "pass123!"
+    volumes:
+    # NOTE the quotes and forward slashes
+    - "${USERPROFILE}/.aspnet/https:/https:ro"
+    ports:
+      - "7002:8080"
+
+
+  fe-nav:
+    build:
+      context: ..
+      dockerfile: src/FE-NAV/Dockerfile
+    container_name: fe-nav
+    restart: unless-stopped
+    depends_on:
+      - gateway-bff
+    ports:
+      - "4200:4200"  
+
+volumes:
+  mssql-data:
